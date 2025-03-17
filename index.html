@@ -46,7 +46,7 @@
     document.getElementById("result").innerHTML = "Generating meal plan... ⏳";
 
     // Use the correct base Replit API URL (no "/meal-plan" in the path)
-    const response = await fetch("https://5dff5231-453e-4450-9cf0-9efadc8d9c61-00-38qfoh1u0km8r.sisko.replit.dev/meal-plan", {
+    const response = await fetch("https://5dff5231-453e-4450-9cf0-9efadc8d9c61-00-38qfoh1u0km8r.sisko.replit.dev/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ "calories": parseInt(calories) })
