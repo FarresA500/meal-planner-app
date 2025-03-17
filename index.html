@@ -5,25 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Meal Planner</title>
     <style>
+        /* Center everything on the page */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;  /* Horizontally centers the container */
+            align-items: center;      /* Vertically centers the container */
+            height: 100vh;            /* Full height of the viewport */
+            text-align: center;       /* Centers the text */
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 80%;  /* Ensures responsiveness */
+            max-width: 600px;  /* Restricts the maximum width */
         }
 
         /* Style for the heading */
         h1 {
-            text-align: center;  /* Center the heading */
-            margin-top: 50px;     /* Optional: Add space from top */
-            color: #333;         /* Optional: Set text color */
+            margin-top: 0;    /* Removes unnecessary margin */
+            color: #333;
         }
 
+        /* Styling for the input and button */
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 60%;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            background-color: #3e8e41;
+        }
+
+        /* Styling for the result area */
         #result {
             padding: 20px;
             margin-top: 20px;
         }
 
+        /* Styling for individual meal days */
         .meal-day {
             background-color: #fff;
             padding: 20px;
