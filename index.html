@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Meal Planner</title>
     <style>
-        /* Body Layout */
+        /* Body Layout - Center content vertically and horizontally */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
             display: flex;
-            justify-content: center; /* Horizontally center the container */
-            align-items: flex-start; /* Align items to the top */
-            height: 100vh; /* Full height of the viewport */
-            text-align: center; /* Center the text */
+            justify-content: center;  /* Center the container horizontally */
+            align-items: flex-start;  /* Align the container at the top */
+            height: 100vh;            /* Full height of the viewport */
+            text-align: center;       /* Center the text */
         }
 
         /* Container Styling */
@@ -24,19 +24,20 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            width: 80%;  /* Ensures responsiveness */
-            max-width: 600px;  /* Restricts the maximum width */
-            margin-top: 30px; /* Adds some margin from the top */
+            width: 80%;               /* Ensure the container is responsive */
+            max-width: 600px;         /* Restrict max width */
+            margin-top: 30px;         /* Space from the top */
+            padding-bottom: 40px;     /* Add padding at the bottom */
         }
 
         /* Heading Styling */
         h1 {
-            margin-top: 0; /* Removes unnecessary margin */
+            margin-top: 0;
             color: #333;
-            font-size: 2em; /* Slightly smaller font size */
+            font-size: 1.8em;          /* Smaller font size for better readability */
         }
 
-        /* Input and Button Styling */
+        /* Styling for the input and button */
         input {
             padding: 10px;
             font-size: 16px;
@@ -44,7 +45,7 @@
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
-            box-sizing: border-box; /* Ensures padding is inside width */
+            box-sizing: border-box;   /* Ensure padding is inside width */
         }
 
         button {
@@ -64,34 +65,34 @@
             background-color: #3e8e41;
         }
 
-        /* Styling for Result Area */
+        /* Result Styling */
         #result {
             padding: 20px;
             margin-top: 20px;
             color: #333;
-            font-size: 1.1em; /* Smaller font size */
+            font-size: 1em;  /* Adjusted font size */
         }
 
-        /* Styling for Each Meal Day */
+        /* Styling for individual meal days */
         .meal-day {
             background-color: #fff;
             padding: 15px;
             margin: 15px 0;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 1em; /* Smaller font size */
+            font-size: 1em;     /* Smaller font size for better readability */
         }
 
         .meal-day h3 {
-            font-size: 1.2em;
+            font-size: 1.3em;   /* Reduce the header size */
             color: #333;
             margin-bottom: 10px;
         }
 
         .meal-day p {
-            font-size: 1em; /* Adjusted font size for better readability */
+            font-size: 1em;     /* Adjusted for readability */
             color: #555;
-            line-height: 1.5; /* Increases readability */
+            line-height: 1.5;   /* Increases readability */
         }
 
         .meal-day p br {
