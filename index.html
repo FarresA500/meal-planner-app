@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Meal Planner</title>
+    <title>🍽️ AI Meal Planner</title>
     <style>
         /* Body Layout - Center content vertically and horizontally */
         body {
@@ -104,15 +104,31 @@
         #result .error {
             color: red;
         }
+
+        /* Style for numbered cooking steps */
+        .steps {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .steps li {
+            margin: 5px 0;
+        }
+
+        .steps li:before {
+            content: counter(step) ". ";
+            counter-increment: step;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>AI Meal Planner</h1>
+        <h1>🍽️ AI Meal Planner</h1>
         <div id="form-container">
             <label>Enter your daily calorie goal:</label>
-            <input type="number" id="calories" value="2200">
+            <input type="number" id="calories" placeholder="e.g. 2200">
             <button id="generateBtn" onclick="getMealPlan()">Generate Plan</button>
         </div>
         <div id="result"></div>
@@ -169,10 +185,24 @@
                 formattedMessage += `<div class="meal-day">
                                         <h3>Day ${index + 1}</h3>
                                         <p>${day.replace(/\n/g, "<br>")}</p>
+                                        <h4>Cooking Steps:</h4>
+                                        <ol class="steps">${formatSteps(day)}</ol>
                                      </div>`;
             });
 
             return formattedMessage;
+        }
+
+        // Format the steps to be numbered
+        function formatSteps(day) {
+            const stepList = day.split("\n");
+            let formattedSteps = "";
+            stepList.forEach(step => {
+                if (step.trim()) {
+                    formattedSteps += `<li>${step.trim()}</li>`;
+                }
+            });
+            return formattedSteps;
         }
     </script>
 </body>
