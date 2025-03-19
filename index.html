@@ -1,67 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Meal Planner</title>
+    <title>🍽️ AI Meal Planner</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
+        /* Body Layout - Center content vertically and horizontally */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* Container Styling */
+        .container {
+            background-color: #fff;
             padding: 20px;
-            background-color: #f5f5f5;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 30px;
+            padding-bottom: 40px;
         }
-        input, button { 
-            padding: 10px; 
-            width: 250px; 
-            margin: 10px; 
-            border-radius: 5px; 
-            border: 1px solid #ccc;
+
+        /* Heading Styling */
+        h1 {
+            margin-top: 0;
+            color: #333;
+            font-size: 2em;
         }
-        button { 
-            background: #007bff; 
-            color: white; 
-            cursor: pointer;
+
+        /* Styling for the input and button */
+        input {
+            padding: 10px;
             font-size: 16px;
+            width: 70%;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
-        button:hover { background: #0056b3; }
-        pre { 
-            text-align: left; 
-            background: #fff; 
-            padding: 15px; 
-            border-radius: 5px; 
-            overflow-x: auto;
-            max-width: 90%;
-            margin: auto;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            background-color: #3e8e41;
+        }
+
+        /* Styling for the result area */
+        #result {
+            padding: 20px;
+            margin-top: 20px;
+            color: #333;
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        /* Styling for individual meal days */
+        .meal-day {
+            background-color: #fff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+
+        .meal-day h3 {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .meal-day p {
+            font-size: 1em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .meal-day p br {
+            margin-bottom: 10px;
+        }
+
+        #result .error {
+            color: red;
+        }
+
+        /* Style for numbered cooking steps */
+        .steps {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .steps li {
+            margin: 5px 0;
+        }
+
+        .steps li:before {
+            content: counter(step) ". ";
+            counter-increment: step;
+            font-weight: bold;
         }
     </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🍽️ AI Meal Planner</h1>
+        <div id="form-container">
+            <label>Enter your daily calorie goal:</label>
+            <input type="number" id="calories" placeholder="e.g. 2200">
+            <button id="generateBtn" onclick="generate_meal_plan()">Generate Plan</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
     <script>
-        async function getMealPlan() {
+        // JavaScript function to generate meal plan
+        async function generate_meal_plan() {
             const calories = document.getElementById("calories").value;
-            if (!calories) {
-                alert("Please enter a calorie amount.");
+
+            // Make sure calories is a valid number before sending
+            if (!calories || isNaN(calories)) {
+                alert("Please enter a valid calorie amount.");
                 return;
             }
+
             document.getElementById("result").innerHTML = "Generating meal plan... ⏳";
 
-            const response = await fetch("https://meal-planner-app-lake.vercel.app", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ "calories": parseInt(calories) })
+            try {
+                // Send the calorie value to the backend
+                const response = await fetch("https://5dff5231-453e-4450-9cf0-9efadc8d9c61-00-38qfoh1u0km8r.sisko.replit.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ "calories": parseInt(calories) })
+});
+
+                // Check if response is OK
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Check if the 'whatsapp_message' field is in the response
+                if (data.whatsapp_message) {
+                    document.getElementById("result").innerHTML = formatMealPlan(data.whatsapp_message);
+                } else {
+                    document.getElementById("result").innerHTML = "Error: No meal plan returned.";
+                }
+            } catch (error) {
+                console.error("Error fetching meal plan:", error);
+                document.getElementById("result").innerHTML = `<div style="color: red">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Format the meal plan response
+        function formatMealPlan(message) {
+            const days = message.split("\n──────────────\n");  // Split the message into separate days
+            let formattedMessage = "";
+
+            // Iterate through each day of the week
+            days.forEach((day, index) => {
+                formattedMessage += `<div class="meal-day">
+                                        <h3>Day ${index + 1}</h3>
+                                        <p>${day.replace(/\n/g, "<br>")}</p>
+                                        <h4>Cooking Steps:</h4>
+                                        <ol class="steps">${formatSteps(day)}</ol>
+                                     </div>`;
             });
 
-            const data = await response.json();
-            document.getElementById("result").innerHTML = data.whatsapp_message.replace(/\n/g, "<br>");
+            return formattedMessage;
+        }
+
+        // Format the steps to be numbered
+        function formatSteps(day) {
+            const stepList = day.split("\n");
+            let formattedSteps = "";
+            stepList.forEach(step => {
+                if (step.trim()) {
+                    formattedSteps += `<li>${step.trim()}</li>`;
+                }
+            });
+            return formattedSteps;
         }
     </script>
-</head>
-<body>
-    <h1>🥗 AI Meal Planner</h1>
-    <p>Enter your daily calorie goal to generate a weekly meal plan:</p>
-    <input type="number" id="calories" placeholder="e.g., 2200" />
-    <button onclick="getMealPlan()">Generate Plan</button>
-    <h2>Meal Plan:</h2>
-    <pre id="result"></pre>
 </body>
+
 </html>
