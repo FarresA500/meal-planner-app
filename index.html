@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +12,10 @@
             padding: 0;
             background-color: #f9f9f9;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            text-align: center;
+            justify-content: center; /* Horizontally center the container */
+            align-items: flex-start; /* Align items to the top */
+            min-height: 100vh; /* Ensure full screen height */
+            text-align: center; /* Center the text */
         }
 
         /* Container Styling */
@@ -25,17 +24,17 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            width: 80%;
-            max-width: 600px;
-            margin-top: 30px;
-            padding-bottom: 40px;
+            width: 80%; /* Ensure the container is responsive */
+            max-width: 600px; /* Restrict max width */
+            margin-top: 30px; /* Space from the top */
+            padding-bottom: 40px; /* Add padding at the bottom */
         }
 
         /* Heading Styling */
         h1 {
             margin-top: 0;
             color: #333;
-            font-size: 2em;
+            font-size: 2em; /* Slightly smaller font size */
         }
 
         /* Styling for the input and button */
@@ -46,7 +45,7 @@
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Ensures padding is inside width */
         }
 
         button {
@@ -122,24 +121,35 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>🍽️ AI Meal Planner</h1>
         <div id="form-container">
             <label>Enter your daily calorie goal:</label>
             <input type="number" id="calories" placeholder="e.g. 2200">
-            <button id="generateBtn" onclick="generate_meal_plan()">Generate Plan</button>
+            
+            <!-- Dietary Restrictions -->
+            <label>
+                <input type="checkbox" id="dairyFree"> Dairy Free
+            </label>
+            <br>
+            <label>
+                Allergies (comma separated): 
+                <input type="text" id="allergies" placeholder="e.g. peanuts, gluten">
+            </label>
+            <br>
+            <button id="generateBtn" onclick="getMealPlan()">Generate Meal Plan</button>
         </div>
         <div id="result"></div>
     </div>
 
     <script>
-        // JavaScript function to generate meal plan
-        async function generate_meal_plan() {
+        async function getMealPlan() {
             const calories = document.getElementById("calories").value;
+            const dairyFree = document.getElementById("dairyFree").checked;
+            const allergies = document.getElementById("allergies").value.split(',').map(item => item.trim());
 
-            // Make sure calories is a valid number before sending
+            // Validation
             if (!calories || isNaN(calories)) {
                 alert("Please enter a valid calorie amount.");
                 return;
@@ -148,21 +158,22 @@
             document.getElementById("result").innerHTML = "Generating meal plan... ⏳";
 
             try {
-                // Send the calorie value to the backend
                 const response = await fetch("https://5dff5231-453e-4450-9cf0-9efadc8d9c61-00-38qfoh1u0km8r.sisko.replit.dev/meal-plan", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ "calories": parseInt(calories) })
+                    body: JSON.stringify({
+                        calories: parseInt(calories),
+                        dairyFree: dairyFree,
+                        allergies: allergies
+                    })
                 });
 
-                // Check if response is OK
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
                 const data = await response.json();
 
-                // Check if the 'whatsapp_message' field is in the response
                 if (data.whatsapp_message) {
                     document.getElementById("result").innerHTML = formatMealPlan(data.whatsapp_message);
                 } else {
@@ -174,12 +185,10 @@
             }
         }
 
-        // Format the meal plan response
         function formatMealPlan(message) {
             const days = message.split("\n──────────────\n");  // Split the message into separate days
             let formattedMessage = "";
 
-            // Iterate through each day of the week
             days.forEach((day, index) => {
                 formattedMessage += `<div class="meal-day">
                                         <h3>Day ${index + 1}</h3>
@@ -192,7 +201,6 @@
             return formattedMessage;
         }
 
-        // Format the steps to be numbered
         function formatSteps(day) {
             const stepList = day.split("\n");
             let formattedSteps = "";
@@ -205,5 +213,4 @@
         }
     </script>
 </body>
-
 </html>
